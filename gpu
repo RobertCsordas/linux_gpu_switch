@@ -1,0 +1,34 @@
+#!/bin/bash
+
+function setstate {
+	if [[ "$1" == "on" ]]; then
+		tee /proc/acpi/bbswitch<<<ON > /dev/null
+		modprobe nvidia_uvm 2>/dev/null
+		modprobe nvidia_modeset 2>/dev/null
+		if [[ "`cat /proc/acpi/bbswitch|awk '{print $2}'`" != "ON" ]]; then
+			echo "Failed to set GPU state"
+		fi
+	elif [[ "$1" == "off" ]]; then
+		rmmod nvidia_uvm 2>/dev/null
+		rmmod nvidia_modeset 2>/dev/null
+		rmmod --force nvidia 2>/dev/null
+		tee /proc/acpi/bbswitch<<<OFF > /dev/null
+		if [[ "`cat /proc/acpi/bbswitch|awk '{print $2}'`" != "OFF" ]]; then
+			echo "Failed to set GPU state"
+		fi
+	fi
+}
+
+STATE=`cat /proc/acpi/bbswitch|awk '{print $2}'`
+
+if [[ $# -eq 0 ]] ; then
+	echo "GPU state: $STATE"
+    exit 1
+fi
+
+if [ $(whoami) != "root" ]; then
+	sudo $0 $1
+	exit 0
+fi
+
+setstate $1
