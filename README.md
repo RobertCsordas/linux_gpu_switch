@@ -1,7 +1,7 @@
 # GPU switching script for Linux
 
 ## Description
-It can turn on/off your discrete GPU without running the program with optirun. It also does not start another X server, like optirun does. It is ideal if you want to use your GPU only for CUDA compute.
+It can turn on/off your discrete GPU for compute without graphics, without running the program with optirun. It also does not start another X server, like optirun does. It is ideal if you want to use your GPU only for CUDA compute.
 
 ## Setup
 You need to have bumblebee installed in order for this to work. For more details on how to set it up, see https://wiki.archlinux.org/index.php/bumblebee.
